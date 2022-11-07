@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fluentui/react": "^8.100.0",
+    "@mscrmaddons/components": "git+https://dev.azure.com/mscrmaddons/MSCRMAddonsPAckages/_git/MSCRMAddonsComponents",
+    "@mscrmaddons/utils": "git+https://dev.azure.com/mscrmaddons/MSCRMAddonsPAckages/_git/MSCRMAddonsPAckages",
+    "@syncfusion/ej2-react-grids": "^20.3.52",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

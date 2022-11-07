@@ -1,23 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
+import data1 from './dataSource.json';
+import data2 from './dataSource2.json';
+import { DefaultSettings } from '@mscrmaddons/components/lib/Grids/UniversalGrid';
+import { UniversalGrid } from '@mscrmaddons/components/lib/Grids/UniversalGrid';
+
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>Testing the new UniversalGrid component</p>
+      <h1>{data1.length}</h1>
+      <h1>{data2.length}</h1>
+      <p>Trigger Changes</p>
     </div>
   );
 }
