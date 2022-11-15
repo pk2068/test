@@ -1,3 +1,14 @@
+/* @import url('https://cdn.syncfusion.com/ej2/material.css'); */
+@import '../node_modules/@syncfusion/ej2-base/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-calendars/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-navigations/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/fabric.css';
+@import '../node_modules/@syncfusion/ej2-splitbuttons/styles/fabric.css';
+@import "../node_modules/@syncfusion/ej2-react-grids/styles/fabric.css"; 
+
 .App {
   text-align: center;
 }
@@ -36,3 +47,13 @@
     transform: rotate(360deg);
   }
 }
+
+/* .e-grid .e-headercelldiv, 
+.e-grid .e-rowcell,       
+.e-grid .e-summarycell,   
+.e-grid .e-row .e-input-group .e-input.e-field {  
+  font-size: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-left: 2px !important; 
+  padding-right: 2px !important; 
+} */
