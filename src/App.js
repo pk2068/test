@@ -46,7 +46,7 @@ function App() {
      //#endregion
 
      return (
-          <div className="App">
+          <div className="App" >
                <p>Testing the GridComponent theme</p>
                
                <p>Trigger Changes</p>
