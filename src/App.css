@@ -1,61 +1,67 @@
-/* @import url('https://cdn.syncfusion.com/ej2/material.css'); */
-@import '../node_modules/@syncfusion/ej2-base/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-buttons/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-calendars/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-dropdowns/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-inputs/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-navigations/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-popups/styles/fabric.css';
-@import '../node_modules/@syncfusion/ej2-splitbuttons/styles/fabric.css';
-@import "../node_modules/@syncfusion/ej2-react-grids/styles/fabric.css"; 
+@import '../node_modules/@syncfusion/ej2-base/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-calendars/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-navigations/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/fluent.css';
+@import '../node_modules/@syncfusion/ej2-splitbuttons/styles/fluent.css';
+@import "../node_modules/@syncfusion/ej2-react-grids/styles/fluent.css"; 
 
 .App {
+  height: 100vh;
+  background-color: #eaf609;
   text-align: center;
+  margin-top: 0px;
+  margin-bottom: 0px;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+
+.Header-app {
+  height: 20vh;
+  background-color: red;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.Body-app {
+  height: auto;
+  background-color: white;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Footer-app {
+  height: 10vh;
+  background-color: blue;
+}
+
+
+.box {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-flow: column;
+  height: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+.box .row {
+  border: 1px dotted grey;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.box .row.header {
+  flex: 0 1 auto;
+  background-color: red;
+  /* The above is shorthand for:
+  flex-grow: 0,
+  flex-shrink: 1,
+  flex-basis: auto
+  */
 }
 
-/* .e-grid .e-headercelldiv, 
-.e-grid .e-rowcell,       
-.e-grid .e-summarycell,   
-.e-grid .e-row .e-input-group .e-input.e-field {  
-  font-size: 12px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding-left: 2px !important; 
-  padding-right: 2px !important; 
-} */
+.box .row.content {
+  flex: 1 1 auto;  
+  background-color: white;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
+  background-color: blue;
+}
