@@ -1,11 +1,10 @@
+import { React, useEffect, useRef, useState } from "react";
 import './App.css';
 import dataA from './dataSource.json';
 import dataB from './dataSource2.json';
-import { React, useState } from "react";
-//import { ColumnsDirective, ColumnDirective, Filter } from "@syncfusion/ej2-react-grids";
+import { ColumnsDirective, ColumnDirective } from "@syncfusion/ej2-react-grids";
 import {
-     ColumnDirective, ColumnsDirective, Filter,
-     Sort, Resize, VirtualScroll, Inject, InfiniteScroll, ContextMenu, GridComponent
+     ContextMenu, Filter, GridComponent, InfiniteScroll, Inject, Resize, Sort, VirtualScroll
 } from '@syncfusion/ej2-react-grids';
 
 import { DefaultButton } from "@fluentui/react";
@@ -16,15 +15,80 @@ registerLicense('ORg4AjUWIQA/Gnt2VVhjQlFac11JXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXx
 
 function App() {
 
-     const [data, setData] = useState(() => dataA);
+     const [data, setData] = useState([]);
+     const gridInstanceRef = useRef();
+     const divHeaderRef = useRef();
+     const divFooterRef = useRef();
+     const divBoxRef = useRef();
+
+     const refContainer = useRef();
+     const [dimensions, setDimensions] = useState({ height: 0 });
+     const [gridDimensions, setGridDimensions] = useState({ height: 200 });
+
+     useEffect(() => {
 
 
-     const changeData = (e) => {
+          if (refContainer.current) {
+               setDimensions({
+                    width: refContainer.current.offsetWidth,
+                    height: refContainer.current.offsetHeight,
+               });
+
+               console.log("refContainer.current.offsetHeight", refContainer.current.offsetHeight, refContainer.current, refContainer.current.offsetHeight);
+               console.log("divBoxRef.current.offsetHeight", divBoxRef.current.offsetHeight);
+               console.log("divHeaderRef.current.offsetHeight", divHeaderRef.current.offsetHeight);
+               console.log("divFooterRef.current.offsetHeight", divFooterRef.current.offsetHeight);
+
+               if (gridInstanceRef.current) {
+
+                    console.log("gridInstanceRef.current.height", gridInstanceRef.current.height);
+
+                    let newHeight = refContainer.current.offsetHeight - divHeaderRef.current.offsetHeight - divFooterRef.current.offsetHeight - 50;
+                    setGridDimensions({ height: newHeight });
+                    console.info("%c GridComponent Height", 'background:green, color:pink', newHeight);
+               }
+          }
+     }, []);
+
+     const toDataA = (e) => {
+          setData(dataA);
+          gridInstanceRef.current.refresh();
+     }
+
+     const toDataB = (e) => {
+          setData(dataB);
+          gridInstanceRef.current.refresh();
+     }
+
+     const emptyData = (e) => {
+          setData([]);
+          //gridInstanceRef.current.refresh();
+     }
+
+     const incrementUserIDs = () => {
+          data.forEach(element => { element.userId += 1; });
+     }
+
+     function changeUserIDData() {
+
+          for (let i = 0; i < 5; i++) {
+               console.log("For loop iteration: ", i);
+               setTimeout(() => {
+                    incrementUserIDs();
+                    console.log("refreshing :", i);
+                    gridInstanceRef.current.refresh();
+               }, 2500);
+
+          }
+     }
+
+     const changeLicenseData = (e) => {
           if (data.length === dataA.length)
                setData(dataB)
           else
                setData(dataA);
      }
+
 
 
      //#region SyncFS GridComponent settings
@@ -35,107 +99,176 @@ function App() {
           showFilterBarOperator: true,
           type: 'Menu'
      }
+
      const contextMenuItems = [
           { text: 'Open Config', id: 'openconfig1', target: '.e-content' },
           { text: 'Open Config as Admin', id: 'openconfig2', target: '.e-content' },
           { text: 'Open Config as Admin filtered', id: 'openconfig3', target: '.e-content' }
-      ];
+     ];
      const contextmenuClick = async (ev) => { }
 
-          
+     const TemplateCreatedOnMonth = (prop) => 
+     {
+          let returnVal = "*";
+
+          if (!prop)
+               return (<span></span>);
+          if (!prop.createdonMonth)     
+               return (<span></span>);
+
+          switch (prop.createdonMonth) {
+               case 12:
+                   returnVal = "DEC";
+                   break;
+               case 11:
+                   returnVal = "NOV";
+                   break;
+               case 10:
+                   returnVal = "OCT";
+                   break;
+               case 9:
+                   returnVal = "SEP";
+                   break;
+               case 8:
+                   returnVal = "AVG";
+                   break;
+               case 7:
+                   returnVal = "JUL";
+                   break;
+               case 6:
+                   returnVal = "JUN";
+                   break;
+               case 5:
+                   returnVal = "MAI";
+                   break;
+                   case 4:
+                   returnVal = "APR";
+                   break;
+               case 3:
+                   returnVal = "MAR";
+                   break;
+               case 2:
+                   returnVal = "FEB"
+                   break;
+               case 1:
+                   returnVal = "Jan";
+                   break;
+               
+               default:
+                   returnVal = "-";
+           }
+
+           return (<span>{returnVal}</span>);
+
+
+     }
+
      //#endregion
 
      return (
-          <div className="App" >
-               <p>Testing the GridComponent theme</p>
-               
-               <p>Trigger Changes</p>
-               <DefaultButton text={"Change Data"} onClick={changeData} />
-               
+
+          <div className="App" ref={refContainer} >
 
 
-               <GridComponent
-                    dataSource={data}
-                    enableInfiniteScrolling={true}
-                    enableVirtualization={false}
-                    enableHeaderFocus={false}
-                    enableSearch={false}
-                    height={'60vh'}
-                    rowHeight={30}
-                    allowSelection={true}
-                    allowFiltering={true}
-                    filterSettings={filterOptions}
-                    allowPaging={false}                     
-                    allowResizing={true}
-                    allowReordering={true}
-                    allowSorting={true}
-                    allowGrouping={false}
-                    delayUpdate={true}
-                    selectionSettings={settings}
-                    rowSelected={ (e) => {} }
-                    contextMenuItems={contextMenuItems}
-                    contextMenuClick={contextmenuClick}
-               >
-                    <ColumnsDirective>
-                         <ColumnDirective field='id' headerText='ID' textAlign='Left' width={50} isPrimaryKey={true} clipMode='EllipsisWithTooltip' />
-                         <ColumnDirective field='serviceName' headerText='Name' textAlign='Left' width={150} clipMode='EllipsisWithTooltip'
-                         />
-                         <ColumnDirective field='userName' headerText='User' textAlign='Left' width={200} clipMode='EllipsisWithTooltip' a />
-                         <ColumnDirective field='createdon' headerText='Created' textAlign='Left' width={70}
-                         />
-                         <ColumnDirective field='organizationName' headerText='Organization' textAlign='Left' width={150} />
-                         <ColumnDirective field='instanceName' headerText='Instance' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
-                         <ColumnDirective field='ServiceStopDate' type="date" headerText='Stop Date' textAlign='Left' width={100} clipMode='EllipsisWithTooltip'
-                         />
-                         <ColumnDirective field='discoveryWebServiceUrl' headerText='Discovery Web Service Url' textAlign='Left' width={350} clipMode='EllipsisWithTooltip' />
-                         <ColumnDirective field='ServiceStatusDescription' headerText='Status Description' textAlign='Left' width={250} clipMode='EllipsisWithTooltip' allowResizing={true} />
-                         <ColumnDirective field='inactiveSince' type="date" headerText='Inactive Since' textAlign='Center' width={70}
-                              clipMode='EllipsisWithTooltip' />
-                         <ColumnDirective field='licenseKey' textAlign='Center'
-                              headerText='License Key' width={100} clipMode='EllipsisWithTooltip'
-                              headerTextAlign='Left'
-                              filter={{ type: 'CheckBox' }} />
 
-                         <ColumnDirective field='subscriptionNumber' headerText='SubscriptionNumber' textAlign='Center' width={150}
-                         />
-                         <ColumnDirective field='validDate' type="date" headerText='Expired(valid)' textAlign='Center' width={100}
-                         />
-                         <ColumnDirective field='purchased' headerText='Purchased' textAlign='Center' width={80} clipMode="EllipsisWithTooltip" />
-                         <ColumnDirective field='count' headerText='Site Licenses' textAlign='Center' width={150} clipMode="EllipsisWithTooltip" />
-                         <ColumnDirective field='crmVersion' headerText='CRM Version' clipMode='EllipsisWithTooltip'
-                              textAlign='Left' width={100} />
-                         <ColumnDirective field='sendChanges' headerText='Send Changes' textAlign='Center' width={70}
-                              clipMode='EllipsisWithTooltip' />
-                         <ColumnDirective field='disabled' headerText='disabled' textAlign='Center' width={70}
-                              clipMode='EllipsisWithTooltip' />
+               <div className="box" ref={divBoxRef}>
+                    <div className="row header" ref={divHeaderRef}>
+                         <p><b>header</b></p>
 
-                    </ColumnsDirective>
-                    <Inject services={[Filter, Sort, VirtualScroll, Resize, InfiniteScroll, ContextMenu]} />
-               </GridComponent>
+                         <DefaultButton text={"Data A"} onClick={toDataA} />
+                         <DefaultButton text={"Data B"} onClick={toDataB} />
+                         <DefaultButton text={"Empty Data"} onClick={emptyData} />
+                         <DefaultButton text={"Increase UserID count"} onClick={changeUserIDData} />
+                         <DefaultButton text={"Increase License count"} onClick={changeLicenseData} />
+                         <p>div ALL : h-{dimensions.height}px // gridComponent: h-{gridDimensions.height}px</p>
+                         <p>header: h-{divHeaderRef.current ? divHeaderRef.current.offsetHeight : -1}px </p>
+                         <p>footer: h-{divFooterRef.current ? divFooterRef.current.offsetHeight : -1}px </p>
+                    </div>
 
-               <h1>Num of rows in data source: {data.length}</h1>
+
+
+                    <div className="row content" >
+                         {data ?
+                              <GridComponent
+                                   dataSource={data}
+                                   dataBound={(e) => console.log("dataBound triggered", e)}
+                                   dataSourceChanged={(e) => console.log("dataSourceChanged triggered", e)}
+                                   dataStateChange={(e) => console.log("dataStateChange triggered", e)}
+                                   
+
+                                   ref={gridInstanceRef}
+                                   enableInfiniteScrolling={true}
+                                   enableVirtualization={true}
+                                   enableHeaderFocus={false}
+                                   enableSearch={false}
+                                   height={gridDimensions.height}
+                                   rowHeight={36}
+                                   allowSelection={true}
+                                   allowFiltering={true}
+                                   filterSettings={filterOptions}
+                                   allowPaging={false}
+                                   allowResizing={true}
+                                   allowReordering={true}
+                                   allowSorting={true}
+                                   allowGrouping={false}
+                                   delayUpdate={true}
+                                   selectionSettings={settings}
+                                   rowSelected={(e) => { }}
+                                   contextMenuItems={contextMenuItems}
+                                   contextMenuClick={contextmenuClick}
+                              >
+                                   <ColumnsDirective>
+                                        <ColumnDirective field='id' headerText='ID' textAlign='Left' width={70} isPrimaryKey={true} />
+                                        <ColumnDirective field='userName' headerText='User' textAlign='Left' clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='userId' headerText='User ID' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='userIdCount' headerText='User Count' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='serviceName' headerText='Service Name' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='disabled' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='createdonDay' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='createdonDayWeek' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='createdonDayYear' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='createdonMonth' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' template={TemplateCreatedOnMonth} />
+                                        <ColumnDirective field='createdonYear' textAlign='Left' width={50} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='organizationName' headerText='Org' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='discoveryWebServiceUrl' headerText='Disco' textAlign='Left' width={140} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='instanceId' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='instanceName' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='instanceUrl' textAlign='Left' width={140} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='ServiceStatusDescription' headerText='Status' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='ServiceStopDate' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='inactiveSince' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='sendChanges' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='productId' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+
+
+                                   </ColumnsDirective>
+
+                                   <Inject services={[Filter, Sort, VirtualScroll, Resize, InfiniteScroll, ContextMenu]} />
+                              </GridComponent>
+                              : <GridComponent
+                                   ref={gridInstanceRef} />
+                         }
+
+                    </div>
+
+
+
+                    <div className="row footer" ref={divFooterRef}>
+                         <p><b>footer</b> (fixed height)</p>
+                    </div>
+               </div>
+
 
 
 
           </div>
 
+
      );
-
-     //const [value, SetValue] = useState(initialState)
-
-     //     const [data, setData] = useState(data1);
-
-     //     return (        <div className="App">            <p>Testing the new UniversalGrid component</p>            <h1>{data1.length}</h1>            <h1>{data2.length}</h1>            <p>Trigger Changes</p>
-
-     //             <DefaultButton text={"Update DS"} onClick={() => setData(data2)}/>
-
-     //             <UniversalGrid debug={true}  dataSource={data} injections={[Filter]} columns={(
-
-     //                 <ColumnsDirective>                    <ColumnDirective field={"id"}/>                    <ColumnDirective field={"serviceName"}/>                    <ColumnDirective field={"instanceName"}/>                </ColumnsDirective>
-
-     //             )}/>
-
-     //         </div>    );
 }
 
 export default App;
