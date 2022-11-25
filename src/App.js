@@ -55,27 +55,26 @@ function App() {
      }, []);
 
      const toDataA = (e) => {
-          //setData([]);
+          setData([]);
           setTimeout(()=> {
                setData(dataA);
-          if (gridInstanceRef.current)
-          gridInstanceRef.current.refresh();
-          if (gridInstanceRef2.current)
-          gridInstanceRef2.current.refresh();
+          // if (gridInstanceRef.current)
+          // gridInstanceRef.current.refresh();
+          // if (gridInstanceRef2.current)
+          // gridInstanceRef2.current.refresh();
 
           }, 300);
           
      }
 
      const toDataB = (e) => {
-          //setData([]);
-
+          setData([]);
           setTimeout(()=> {
                setData(dataB);
-          if (gridInstanceRef.current)
-          gridInstanceRef.current.refresh();
-          if (gridInstanceRef2.current)
-          gridInstanceRef2.current.refresh();
+          // if (gridInstanceRef.current)
+          // gridInstanceRef.current.refresh();
+          // if (gridInstanceRef2.current)
+          // gridInstanceRef2.current.refresh();
           },300);
      }
 
@@ -281,8 +280,6 @@ function App() {
                                    dataBound={(e) => console.log("dataBound triggered", e)}
                                    dataSourceChanged={(e) => console.log("dataSourceChanged triggered", e)}
                                    dataStateChange={(e) => console.log("dataStateChange triggered", e)}
-
-
                                    ref={gridInstanceRef2}
                                    enableInfiniteScrolling={true}
                                    enableVirtualization={false}
