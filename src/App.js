@@ -2,6 +2,7 @@ import { React, useEffect, useRef, useState } from "react";
 import './App.css';
 import dataA from './dataSource.json';
 import dataB from './dataSource2.json';
+import { Toggle } from '@fluentui/react/lib/Toggle';
 import { ColumnsDirective, ColumnDirective } from "@syncfusion/ej2-react-grids";
 import {
      ContextMenu, Filter, GridComponent, InfiniteScroll, Inject, Resize, Sort, VirtualScroll
@@ -17,6 +18,7 @@ function App() {
 
      const [data, setData] = useState([]);
      const gridInstanceRef = useRef();
+     const gridInstanceRef2 = useRef();
      const divHeaderRef = useRef();
      const divFooterRef = useRef();
      const divBoxRef = useRef();
@@ -24,6 +26,8 @@ function App() {
      const refContainer = useRef();
      const [dimensions, setDimensions] = useState({ height: 0 });
      const [gridDimensions, setGridDimensions] = useState({ height: 200 });
+
+     const [useTemplate, setUseTemplate] = useState(true);
 
      useEffect(() => {
 
@@ -51,13 +55,28 @@ function App() {
      }, []);
 
      const toDataA = (e) => {
-          setData(dataA);
+          //setData([]);
+          setTimeout(()=> {
+               setData(dataA);
+          if (gridInstanceRef.current)
           gridInstanceRef.current.refresh();
+          if (gridInstanceRef2.current)
+          gridInstanceRef2.current.refresh();
+
+          }, 300);
+          
      }
 
      const toDataB = (e) => {
-          setData(dataB);
+          //setData([]);
+
+          setTimeout(()=> {
+               setData(dataB);
+          if (gridInstanceRef.current)
           gridInstanceRef.current.refresh();
+          if (gridInstanceRef2.current)
+          gridInstanceRef2.current.refresh();
+          },300);
      }
 
      const emptyData = (e) => {
@@ -89,6 +108,9 @@ function App() {
                setData(dataA);
      }
 
+     const OnTemplateHandler = (e) => {
+          setUseTemplate(s => s = !s)
+     }
 
 
      //#region SyncFS GridComponent settings
@@ -107,58 +129,57 @@ function App() {
      ];
      const contextmenuClick = async (ev) => { }
 
-     const TemplateCreatedOnMonth = (prop) => 
-     {
+     const TemplateCreatedOnMonth = (prop) => {
           let returnVal = "*";
 
           if (!prop)
                return (<span></span>);
-          if (!prop.createdonMonth)     
+          if (!prop.createdonMonth)
                return (<span></span>);
 
           switch (prop.createdonMonth) {
                case 12:
-                   returnVal = "DEC";
-                   break;
+                    returnVal = "DEC";
+                    break;
                case 11:
-                   returnVal = "NOV";
-                   break;
+                    returnVal = "NOV";
+                    break;
                case 10:
-                   returnVal = "OCT";
-                   break;
+                    returnVal = "OCT";
+                    break;
                case 9:
-                   returnVal = "SEP";
-                   break;
+                    returnVal = "SEP";
+                    break;
                case 8:
-                   returnVal = "AVG";
-                   break;
+                    returnVal = "AVG";
+                    break;
                case 7:
-                   returnVal = "JUL";
-                   break;
+                    returnVal = "JUL";
+                    break;
                case 6:
-                   returnVal = "JUN";
-                   break;
+                    returnVal = "JUN";
+                    break;
                case 5:
-                   returnVal = "MAI";
-                   break;
-                   case 4:
-                   returnVal = "APR";
-                   break;
+                    returnVal = "MAI";
+                    break;
+               case 4:
+                    returnVal = "APR";
+                    break;
                case 3:
-                   returnVal = "MAR";
-                   break;
+                    returnVal = "MAR";
+                    break;
                case 2:
-                   returnVal = "FEB"
-                   break;
+                    returnVal = "FEB"
+                    break;
                case 1:
-                   returnVal = "Jan";
-                   break;
-               
-               default:
-                   returnVal = "-";
-           }
+                    returnVal = "Jan";
+                    break;
 
-           return (<span>{returnVal}</span>);
+               default:
+                    returnVal = "-";
+          }
+
+          return (<span>{returnVal}</span>);
 
 
      }
@@ -180,25 +201,28 @@ function App() {
                          <DefaultButton text={"Empty Data"} onClick={emptyData} />
                          <DefaultButton text={"Increase UserID count"} onClick={changeUserIDData} />
                          <DefaultButton text={"Increase License count"} onClick={changeLicenseData} />
+                         <Toggle label="Templates" inlineLabel onText="On" offText="Off" checked={useTemplate} onChange={OnTemplateHandler} />
                          <p>div ALL : h-{dimensions.height}px // gridComponent: h-{gridDimensions.height}px</p>
                          <p>header: h-{divHeaderRef.current ? divHeaderRef.current.offsetHeight : -1}px </p>
                          <p>footer: h-{divFooterRef.current ? divFooterRef.current.offsetHeight : -1}px </p>
+                         
                     </div>
 
-
+                    {/* template={TemplateCreatedOnMonth} */}
 
                     <div className="row content" >
-                         {data ?
+                         {useTemplate ?
+
                               <GridComponent
                                    dataSource={data}
                                    dataBound={(e) => console.log("dataBound triggered", e)}
                                    dataSourceChanged={(e) => console.log("dataSourceChanged triggered", e)}
                                    dataStateChange={(e) => console.log("dataStateChange triggered", e)}
-                                   
+
 
                                    ref={gridInstanceRef}
                                    enableInfiniteScrolling={true}
-                                   enableVirtualization={true}
+                                   enableVirtualization={false}
                                    enableHeaderFocus={false}
                                    enableSearch={false}
                                    height={gridDimensions.height}
@@ -230,6 +254,7 @@ function App() {
                                         <ColumnDirective field='createdonDayYear' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
 
                                         <ColumnDirective field='createdonMonth' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' template={TemplateCreatedOnMonth} />
+
                                         <ColumnDirective field='createdonYear' textAlign='Left' width={50} clipMode='EllipsisWithTooltip' />
                                         <ColumnDirective field='organizationName' headerText='Org' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
                                         <ColumnDirective field='discoveryWebServiceUrl' headerText='Disco' textAlign='Left' width={140} clipMode='EllipsisWithTooltip' />
@@ -249,8 +274,70 @@ function App() {
 
                                    <Inject services={[Filter, Sort, VirtualScroll, Resize, InfiniteScroll, ContextMenu]} />
                               </GridComponent>
-                              : <GridComponent
-                                   ref={gridInstanceRef} />
+
+                              :
+                              <GridComponent
+                                   dataSource={data}
+                                   dataBound={(e) => console.log("dataBound triggered", e)}
+                                   dataSourceChanged={(e) => console.log("dataSourceChanged triggered", e)}
+                                   dataStateChange={(e) => console.log("dataStateChange triggered", e)}
+
+
+                                   ref={gridInstanceRef2}
+                                   enableInfiniteScrolling={true}
+                                   enableVirtualization={false}
+                                   enableHeaderFocus={false}
+                                   enableSearch={false}
+                                   height={gridDimensions.height}
+                                   rowHeight={36}
+                                   allowSelection={true}
+                                   allowFiltering={true}
+                                   filterSettings={filterOptions}
+                                   allowPaging={false}
+                                   allowResizing={true}
+                                   allowReordering={true}
+                                   allowSorting={true}
+                                   allowGrouping={false}
+                                   delayUpdate={true}
+                                   selectionSettings={settings}
+                                   rowSelected={(e) => { }}
+                                   contextMenuItems={contextMenuItems}
+                                   contextMenuClick={contextmenuClick}
+                              >
+                                   <ColumnsDirective>
+                                        <ColumnDirective field='id' headerText='ID' textAlign='Left' width={70} isPrimaryKey={true} />
+                                        <ColumnDirective field='userName' headerText='User' textAlign='Left' clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='userId' headerText='User ID' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='userIdCount' headerText='User Count' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='serviceName' headerText='Service Name' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='disabled' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='createdonDay' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='createdonDayWeek' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='createdonDayYear' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+
+
+                                        <ColumnDirective field='createdonMonth' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='createdonYear' textAlign='Left' width={50} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='organizationName' headerText='Org' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='discoveryWebServiceUrl' headerText='Disco' textAlign='Left' width={140} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='instanceId' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='instanceName' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='instanceUrl' textAlign='Left' width={140} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='ServiceStatusDescription' headerText='Status' textAlign='Left' width={100} clipMode='EllipsisWithTooltip' />
+
+                                        <ColumnDirective field='ServiceStopDate' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='inactiveSince' textAlign='Left' width={80} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='sendChanges' textAlign='Left' width={60} clipMode='EllipsisWithTooltip' />
+                                        <ColumnDirective field='productId' textAlign='Left' width={40} clipMode='EllipsisWithTooltip' />
+
+
+                                   </ColumnsDirective>
+
+                                   <Inject services={[Filter, Sort, VirtualScroll, Resize, InfiniteScroll, ContextMenu]} />
+                              </GridComponent>
                          }
 
                     </div>
