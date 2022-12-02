@@ -28,6 +28,7 @@ function App() {
      const [gridDimensions, setGridDimensions] = useState({ height: 200 });
 
      const [useTemplate, setUseTemplate] = useState(true);
+     const [useDelay, setUseDelay] = useState(true);
 
      useEffect(() => {
 
@@ -56,27 +57,39 @@ function App() {
 
      const toDataA = (e) => {
           setData([]);
-          setTimeout(()=> {
-               setData(dataA);
-          // if (gridInstanceRef.current)
-          // gridInstanceRef.current.refresh();
-          // if (gridInstanceRef2.current)
-          // gridInstanceRef2.current.refresh();
+          if (useDelay) {
+               setTimeout(() => {
+                    setData(dataA);
 
-          }, 300);
-          
+               }, 300);
+          }
+          else {
+               setData(dataA);
+          }
+
      }
 
      const toDataB = (e) => {
           setData([]);
-          setTimeout(()=> {
-               setData(dataB);
-          // if (gridInstanceRef.current)
-          // gridInstanceRef.current.refresh();
-          // if (gridInstanceRef2.current)
-          // gridInstanceRef2.current.refresh();
-          },300);
+          if (useDelay) {
+               setTimeout(() => {
+                    setData(dataB);
+
+               }, 300);
+          }
+          else {
+               setData(dataB);;
+          }
      }
+
+     const toDataA_Direct = (e) => {
+          setData(dataA);
+     }
+
+     const toDataB_Direct = (e) => {
+          setData(dataB);
+     }
+
 
      const emptyData = (e) => {
           setData([]);
@@ -109,6 +122,10 @@ function App() {
 
      const OnTemplateHandler = (e) => {
           setUseTemplate(s => s = !s)
+     }
+
+     const OnDelayHandler = (e) => {
+          setUseDelay(s => s = !s);
      }
 
 
@@ -189,22 +206,25 @@ function App() {
 
           <div className="App" ref={refContainer} >
 
-
+               <p>Data A : num of records : {dataA.length}</p> 
+               <p>Data B : num of records : {dataB.length}</p> 
 
                <div className="box" ref={divBoxRef}>
                     <div className="row header" ref={divHeaderRef}>
-                         <p><b>header</b></p>
 
                          <DefaultButton text={"Data A"} onClick={toDataA} />
                          <DefaultButton text={"Data B"} onClick={toDataB} />
+                         <DefaultButton text={"Data A Direct"} onClick={toDataA_Direct} />
+                         <DefaultButton text={"Data B Direct"} onClick={toDataB_Direct} />
                          <DefaultButton text={"Empty Data"} onClick={emptyData} />
-                         <DefaultButton text={"Increase UserID count"} onClick={changeUserIDData} />
-                         <DefaultButton text={"Increase License count"} onClick={changeLicenseData} />
+                         {/* <DefaultButton text={"Increase UserID count"} onClick={changeUserIDData} />
+                         <DefaultButton text={"Increase License count"} onClick={changeLicenseData} /> */}
                          <Toggle label="Templates" inlineLabel onText="On" offText="Off" checked={useTemplate} onChange={OnTemplateHandler} />
-                         <p>div ALL : h-{dimensions.height}px // gridComponent: h-{gridDimensions.height}px</p>
+                         <Toggle label="Change with Delay" inlineLabel onText="On" offText="Off" checked={useDelay} onChange={OnDelayHandler} />
+                         {/* <p>div ALL : h-{dimensions.height}px // gridComponent: h-{gridDimensions.height}px</p>
                          <p>header: h-{divHeaderRef.current ? divHeaderRef.current.offsetHeight : -1}px </p>
-                         <p>footer: h-{divFooterRef.current ? divFooterRef.current.offsetHeight : -1}px </p>
-                         
+                         <p>footer: h-{divFooterRef.current ? divFooterRef.current.offsetHeight : -1}px </p> */}
+
                     </div>
 
                     {/* template={TemplateCreatedOnMonth} */}
@@ -224,7 +244,7 @@ function App() {
                                    enableVirtualization={false}
                                    enableHeaderFocus={false}
                                    enableSearch={false}
-                                   height={gridDimensions.height}
+                                   height={'50vh'}
                                    rowHeight={36}
                                    allowSelection={true}
                                    allowFiltering={true}
@@ -285,7 +305,7 @@ function App() {
                                    enableVirtualization={false}
                                    enableHeaderFocus={false}
                                    enableSearch={false}
-                                   height={gridDimensions.height}
+                                   height={'50vh'}
                                    rowHeight={36}
                                    allowSelection={true}
                                    allowFiltering={true}
@@ -336,13 +356,14 @@ function App() {
                                    <Inject services={[Filter, Sort, VirtualScroll, Resize, InfiniteScroll, ContextMenu]} />
                               </GridComponent>
                          }
+                         <p>Lenght of data: {data.length}</p>
 
                     </div>
 
 
 
                     <div className="row footer" ref={divFooterRef}>
-                         <p><b>footer</b> (fixed height)</p>
+                         {/* <p><b>footer</b> (fixed height)</p> */}
                     </div>
                </div>
 
